@@ -21,17 +21,9 @@ func main() {
 	}
 	defer cli.Close()
 
-	reader, err := cli.ImagePull(
-		context.Background(),
-		"nginx",
-		types.ImagePullOptions{})
-	if err != nil {
-		panic(err)
-	}
-	io.Copy(os.Stdout, reader)
-
 	showContainerAll(cli)
 
+	pullImage(cli)
 	createContainer(cli)
 
 	containers := getCountainerAll(cli)
@@ -146,4 +138,15 @@ func removeContainer(cli *client.Client, container types.Container) {
 
 		println(container.ID + " removed")
 	}
+}
+
+func pullImage(cli *client.Client) {
+	reader, err := cli.ImagePull(
+		context.Background(),
+		"nginx",
+		types.ImagePullOptions{})
+	if err != nil {
+		panic(err)
+	}
+	io.Copy(os.Stdout, reader)
 }
